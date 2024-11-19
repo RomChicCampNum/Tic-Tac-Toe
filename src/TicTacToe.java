@@ -1,13 +1,12 @@
-import java.util.Scanner;
-
 public class TicTacToe {
     private static final int SIZE = 3;
     private Cell[][] board;
     private Player playerX;
     private Player playerO;
     private Player currentPlayer;
+    private View view;
 
-    public TicTacToe(Player playerX, Player playerO) {
+    public TicTacToe(Player playerX, Player playerO, View view) {
         board = new Cell[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -17,19 +16,21 @@ public class TicTacToe {
         this.playerX = playerX;
         this.playerO = playerO;
         this.currentPlayer = playerX; // Le joueur X commence
+        this.view = view;
     }
 
     public void play() {
+        view.displayMessage("Début de la partie !");
         while (!isOver()) {
-            System.out.println("C'est au tour de " + currentPlayer.getRepresentation());
+            view.displayMessage("C'est au tour de " + currentPlayer.getRepresentation());
             int[] move = currentPlayer.getMove(board); // Appelle la méthode getMove du joueur
             setOwner(move[0], move[1], currentPlayer);
 
-            display();
+            view.displayBoard(board);
 
             if (isOver()) {
-                System.out.println("Partie terminée !");
-                System.out.println("Le gagnant est : " + currentPlayer.getRepresentation());
+                view.displayMessage("Partie terminée !");
+                view.displayMessage("Le gagnant est : " + currentPlayer.getRepresentation());
                 return;
             }
 
@@ -37,28 +38,10 @@ public class TicTacToe {
         }
     }
 
-    public void display() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                System.out.print(board[i][j].getRepresentation());
-                if (j < SIZE - 1) {
-                    System.out.print("|");
-                }
-            }
-            System.out.println();
-            if (i < SIZE - 1) {
-                System.out.println("-----------");
-            }
-        }
-    }
-
-    private boolean isValidMove(int row, int col) {
-        return row >= 0 && row < SIZE && col >= 0 && col < SIZE && board[row][col].isEmpty();
-    }
-
-    public void setOwner(int row, int col, Player player) {
+    private void setOwner(int row, int col, Player player) {
         board[row][col].setOwner(player);
     }
+
 
     public boolean isOver() {
         // Vérification des lignes, colonnes et diagonales

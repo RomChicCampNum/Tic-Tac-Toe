@@ -1,24 +1,23 @@
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
+        InteractionUtilisateur interactionUtilisateur = new InteractionUtilisateur();
+        View view = new View();
         Player playerX, playerO;
 
-        System.out.println("Choisissez la configuration des joueurs :");
-        System.out.println("1. Humain contre Humain");
-        System.out.println("2. Humain contre IA");
-        System.out.println("3. IA contre IA");
+        view.displayMessage("Choisissez la configuration des joueurs :");
+        view.displayMessage("1. Humain contre Humain");
+        view.displayMessage("2. Humain contre IA");
+        view.displayMessage("3. IA contre IA");
 
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
+        int choice = interactionUtilisateur.askForInt("Votre choix :", 1, 3);
 
         switch (choice) {
             case 1:
-                playerX = new HumanPlayer(" X ");
-                playerO = new HumanPlayer(" O ");
+                playerX = new HumanPlayer(" X ", interactionUtilisateur);
+                playerO = new HumanPlayer(" O ", interactionUtilisateur);
                 break;
             case 2:
-                playerX = new HumanPlayer(" X ");
+                playerX = new HumanPlayer(" X ", interactionUtilisateur);
                 playerO = new ArtificialPlayer(" O ");
                 break;
             case 3:
@@ -26,12 +25,14 @@ public class Main {
                 playerO = new ArtificialPlayer(" O ");
                 break;
             default:
-                System.out.println("Choix invalide, par défaut Humain contre IA.");
-                playerX = new HumanPlayer(" X ");
+                view.displayMessage("Choix invalide, par défaut Humain contre IA.");
+                playerX = new HumanPlayer(" X ", interactionUtilisateur);
                 playerO = new ArtificialPlayer(" O ");
         }
 
-        TicTacToe ticTacToe = new TicTacToe(playerX, playerO);
+        TicTacToe ticTacToe = new TicTacToe(playerX, playerO, view);
         ticTacToe.play();
+
+        interactionUtilisateur.close(); // Libère les ressources
     }
 }
