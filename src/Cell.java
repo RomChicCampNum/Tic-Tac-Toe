@@ -12,6 +12,11 @@ public class Cell {
         this.owner = player; // assigne un joueur comme propriétaire de la cellule
     }
 
+    // Méthode pour récupérer le propriétaire de la cellule
+    public Player getOwner() {
+        return this.owner;
+    }
+
     public boolean isEmpty(){
         return owner == null; // vérifie si la cellule est vide
     }
