@@ -23,8 +23,8 @@ public class TicTacToe {
         view.displayMessage("Début de la partie !");
         while (!isOver()) {
             view.displayMessage("C'est au tour de " + currentPlayer.getRepresentation());
-            int[] move = currentPlayer.getMove(board); // Appelle la méthode getMove du joueur
-            setOwner(move[0], move[1], currentPlayer);
+            int[] move = currentPlayer.getMove(board);
+            setState(move[0], move[1], currentPlayer);
 
             view.displayBoard(board);
 
@@ -38,10 +38,9 @@ public class TicTacToe {
         }
     }
 
-    private void setOwner(int row, int col, Player player) {
-        board[row][col].setOwner(player);
+    private void setState(int row, int col, Player player) {
+        board[row][col].setState(player.getState()); // Définir l'état sur la cellule
     }
-
 
     public boolean isOver() {
         // Vérification des lignes, colonnes et diagonales
@@ -61,7 +60,7 @@ public class TicTacToe {
         // Vérification si le plateau est plein (match nul)
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
-                if (board[row][col].getRepresentation().equals("   ")) {
+                if (board[row][col].isEmpty()) {
                     return false; // Plateau non rempli, le jeu continue
                 }
             }
@@ -70,10 +69,9 @@ public class TicTacToe {
         return true; // Plateau plein et aucune victoire
     }
 
-    // Méthode utilitaire pour vérifier si trois cases sont identiques et non vides
     private boolean checkLine(Cell a, Cell b, Cell c) {
-        return a.getRepresentation().equals(b.getRepresentation()) &&
-                b.getRepresentation().equals(c.getRepresentation()) &&
-                !a.getRepresentation().equals("   ");
+        return a.getState() == b.getState() &&
+                b.getState() == c.getState() &&
+                a.getState() != State.EMPTY;
     }
 }

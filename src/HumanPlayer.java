@@ -1,8 +1,8 @@
 public class HumanPlayer extends Player {
     private InteractionUtilisateur interactionUtilisateur;
 
-    public HumanPlayer(String representation, InteractionUtilisateur interactionUtilisateur) {
-        super(representation);
+    public HumanPlayer(State state, InteractionUtilisateur interactionUtilisateur) {
+        super(state);
         this.interactionUtilisateur = interactionUtilisateur;
     }
 

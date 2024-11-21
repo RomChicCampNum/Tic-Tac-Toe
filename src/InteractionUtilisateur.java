@@ -1,7 +1,6 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-
 public class InteractionUtilisateur {
     private Scanner scanner;
 
@@ -39,21 +38,24 @@ public class InteractionUtilisateur {
 
         switch (choice) {
             case 1:
-                playerX = new HumanPlayer(" X ", this);
-                playerO = new HumanPlayer(" O ", this);
+                // Les joueurs humains utilisent désormais State.X et State.O
+                playerX = new HumanPlayer(State.X, this);
+                playerO = new HumanPlayer(State.O, this);
                 break;
             case 2:
-                playerX = new HumanPlayer(" X ", this);
-                playerO = new ArtificialPlayer(" O ");
+                // Humain contre IA
+                playerX = new HumanPlayer(State.X, this);
+                playerO = new ArtificialPlayer(State.O);
                 break;
             case 3:
-                playerX = new ArtificialPlayer(" X ");
-                playerO = new ArtificialPlayer(" O ");
+                // IA contre IA
+                playerX = new ArtificialPlayer(State.X);
+                playerO = new ArtificialPlayer(State.O);
                 break;
             default:
                 System.out.println("Choix invalide, par défaut Humain contre IA.");
-                playerX = new HumanPlayer(" X ", this);
-                playerO = new ArtificialPlayer(" O ");
+                playerX = new HumanPlayer(State.X, this);
+                playerO = new ArtificialPlayer(State.O);
         }
 
         return new Player[]{playerX, playerO};

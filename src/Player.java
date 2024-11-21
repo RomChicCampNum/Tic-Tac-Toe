@@ -1,14 +1,17 @@
 public abstract class Player {
-    private String representation;
+    private State state;
 
-    public Player(String representation) {
-        this.representation = representation; // Définit le symbole du joueur
+    public Player(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public String getRepresentation() {
-        return representation; // Retourne le symbole du joueur
+        return state.getRepresentation();
     }
 
-    // Méthode abstraite que chaque type de joueur doit implémenter
     public abstract int[] getMove(Cell[][] board);
 }
