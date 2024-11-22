@@ -1,3 +1,8 @@
+package players;
+
+import util.Cell;
+import util.State;
+
 import java.util.Random;
 
 public class ArtificialPlayer extends Player {

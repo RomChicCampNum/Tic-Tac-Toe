@@ -1,3 +1,8 @@
+package players;
+
+import util.Cell;
+import util.State;
+
 public abstract class Player {
     private State state;
 

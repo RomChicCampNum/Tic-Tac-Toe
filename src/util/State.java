@@ -1,3 +1,5 @@
+package util;
+
 public enum State {
     EMPTY("   "), // État vide
     X(" X "),

@@ -1,3 +1,9 @@
+package players;
+
+import util.Cell;
+import util.InteractionUtilisateur;
+import util.State;
+
 public class HumanPlayer extends Player {
     private InteractionUtilisateur interactionUtilisateur;
 

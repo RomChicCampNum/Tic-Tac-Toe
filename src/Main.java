@@ -1,15 +1,15 @@
+import boardgames.BoardGame;
+import boardgames.TicTacToe;
+import players.Player;
+import util.InteractionUtilisateur;
+import util.View;
+
 public class Main {
     public static void main(String[] args) {
-        InteractionUtilisateur interactionUtilisateur = new InteractionUtilisateur();
-        View view = new View();
-
-        // Choix des joueurs via InteractionUtilisateur
-        Player[] players = interactionUtilisateur.choosePlayers();
-
-        // Lancer le jeu avec les joueurs sélectionnés
-        TicTacToe ticTacToe = new TicTacToe(players[0], players[1], view);
-        ticTacToe.play();
-
-        interactionUtilisateur.close(); // Libère les ressources
+        InteractionUtilisateur interaction = new InteractionUtilisateur();
+        BoardGame game = interaction.chooseGame();
+        game.play();
+        interaction.close();
     }
 }
+

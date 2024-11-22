@@ -1,3 +1,5 @@
+package util;
+
 public class View {
     // Affiche un message simple
     public void displayMessage(String message) {
