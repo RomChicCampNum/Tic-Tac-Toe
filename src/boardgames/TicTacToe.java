@@ -1,77 +1,111 @@
 package boardgames;
 
-import players.Player;
-import util.Cell;
+import util.State;
 import util.View;
+import util.Cell;
+import players.Player;
 
 public class TicTacToe extends BoardGame {
     private static final int SIZE = 3; // Taille du plateau
 
-    public TicTacToe(Player[] players) {
-        super(SIZE, SIZE, players); // Appelle le constructeur de BoardGame
-    }
-
-        public TicTacToe(Player player, Player player1, View view) {
-        super();
+    public TicTacToe(Player player1, Player player2, View view) {
+        super(SIZE, SIZE, new Player[]{player1, player2}, view);
     }
 
     @Override
     public void play() {
-        System.out.println("Début du jeu : Tic Tac Toe !");
+        view.displayMessage("Début du jeu : Tic Tac Toe !");
         while (!isOver()) {
-            // Afficher le plateau
-            displayBoard();
+            view.displayBoard(board);
 
-            // Demander un coup au joueur actuel
             boolean validMove = false;
             while (!validMove) {
-                System.out.println("C'est au tour de " + currentPlayer.getState());
+                view.displayMessage("C'est au tour de " + currentPlayer.getState());
                 int[] move = currentPlayer.getMove(board);
-
-                // Validation : Vérifier si la cellule est vide
                 if (isCellEmpty(move[0], move[1])) {
                     board[move[0]][move[1]].setState(currentPlayer.getState());
                     validMove = true;
                 } else {
-                    System.out.println("La case (" + move[0] + ", " + move[1] + ") est déjà occupée. Veuillez choisir une autre case.");
+                    view.displayMessage("Cette case est déjà occupée. Essayez une autre.");
                 }
             }
 
-            // Vérifier si le jeu est terminé
             if (isOver()) {
-                displayBoard();
-                System.out.println("Le gagnant est : " + currentPlayer.getState());
+                view.displayBoard(board);
+                view.displayMessage("Le gagnant est : " + currentPlayer.getState());
                 return;
             }
-
-            // Changer de joueur
             switchPlayer();
         }
-        System.out.println("Match nul !");
+        view.displayMessage("Match nul !");
     }
-
 
     @Override
     public boolean isOver() {
-        // Implémentez les règles pour vérifier les lignes, colonnes et diagonales
-        // Exemple pour les lignes :
-        for (int i = 0; i < SIZE; i++) {
-            if (board[i][0].getRepresentation() != null &&
-                    board[i][0].getRepresentation() == board[i][1].getRepresentation() &&
-                    board[i][1].getRepresentation() == board[i][2].getRepresentation()) {
-                return true;
+        int WIN_CONDITION = 3; // Nombre d'alignements requis pour gagner (3 pour TicTacToe)
+
+        // Vérification horizontale
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col <= board[row].length - WIN_CONDITION; col++) {
+                if (checkLine(row, col, 0, 1)) {
+                    return true; // Ligne horizontale gagnante
+                }
             }
         }
-        // Ajoutez les vérifications pour colonnes, diagonales, et plateau plein
-        return false;
+
+        // Vérification verticale
+        for (int col = 0; col < board[0].length; col++) {
+            for (int row = 0; row <= board.length - WIN_CONDITION; row++) {
+                if (checkLine(row, col, 1, 0)) {
+                    return true; // Colonne verticale gagnante
+                }
+            }
+        }
+
+        // Vérification diagonale (montante)
+        for (int row = WIN_CONDITION - 1; row < board.length; row++) {
+            for (int col = 0; col <= board[row].length - WIN_CONDITION; col++) {
+                if (checkLine(row, col, -1, 1)) {
+                    return true; // Diagonale montante gagnante
+                }
+            }
+        }
+
+        // Vérification diagonale (descendante)
+        for (int row = 0; row <= board.length - WIN_CONDITION; row++) {
+            for (int col = 0; col <= board[row].length - WIN_CONDITION; col++) {
+                if (checkLine(row, col, 1, 1)) {
+                    return true; // Diagonale descendante gagnante
+                }
+            }
+        }
+
+        // Vérification si le plateau est plein
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (board[row][col].isEmpty()) {
+                    return false; // Il reste des cases jouables
+                }
+            }
+        }
+
+        return true; // Plateau plein ou victoire détectée
     }
 
-    private void displayBoard() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                System.out.print(board[i][j].getState().getRepresentation() + " ");
-            }
-            System.out.println();
+    private boolean checkLine(int startRow, int startCol, int deltaRow, int deltaCol) {
+        State firstState = board[startRow][startCol].getState();
+        if (firstState == State.EMPTY) {
+            return false; // Pas d'alignement possible avec une case vide
         }
+
+        for (int i = 1; i < 3; i++) { // Vérifier les 3 cases suivantes
+            int newRow = startRow + i * deltaRow;
+            int newCol = startCol + i * deltaCol;
+            if (board[newRow][newCol].getState() != firstState) {
+                return false; // Rupture dans l'alignement
+            }
+        }
+
+        return true; // Alignement détecté
     }
 }

@@ -1,14 +1,16 @@
 package boardgames;
 
+import util.View;
 import util.Cell;
 import players.Player;
 
 public abstract class BoardGame {
-    protected Cell[][] board;         // Plateau de jeu
-    protected Player[] players;       // Liste des joueurs
-    protected Player currentPlayer;   // Joueur actif
+    protected Cell[][] board;          // Plateau de jeu
+    protected Player[] players;        // Joueurs (X et O)
+    protected Player currentPlayer;    // Joueur actuel
+    protected View view;               // Vue pour afficher le jeu
 
-    public BoardGame(int rows, int cols, Player[] players) {
+    public BoardGame(int rows, int cols, Player[] players, View view) {
         this.board = new Cell[rows][cols];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -17,26 +19,21 @@ public abstract class BoardGame {
         }
         this.players = players;
         this.currentPlayer = players[0];
+        this.view = view;
     }
 
-    public BoardGame() {
+    public abstract void play();      // Chaque jeu implémente sa boucle principale
+    public abstract boolean isOver(); // Vérifie les conditions de fin de jeu
 
-    }
-
-    public BoardGame(Player player1, Player player2) {
-
-    }
-
-    // Méthodes abstraites (doivent être implémentées dans les sous-classes)
-    public abstract void play();
-    public abstract boolean isOver();
-
-    // Méthodes communes
     public void switchPlayer() {
         currentPlayer = (currentPlayer == players[0]) ? players[1] : players[0];
     }
 
     public boolean isCellEmpty(int row, int col) {
         return board[row][col].isEmpty();
+    }
+
+    public Cell[][] getBoard() {
+        return board;
     }
 }

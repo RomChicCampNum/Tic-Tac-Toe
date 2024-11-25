@@ -1,71 +1,51 @@
 package boardgames;
-import players.Player;
-import util.Cell;
 
-import java.util.Arrays;
+import util.State;
+import util.View;
+import util.Cell;
+import players.Player;
 
 public class ConnectFour extends BoardGame {
+    private static final int ROWS = 6;
+    private static final int COLUMNS = 7;
+    private static final int WIN_CONDITION = 4; // Alignement requis pour gagner
 
-    private static final int ROWS = 6;    // Nombre de rangées
-    private static final int COLUMNS = 7; // Nombre de colonnes
-
-    public ConnectFour(Player player1, Player player2) {
-        super(player1, player2); // Initialiser les joueurs via la classe parent
-
-        // Initialiser une grille 6x7 pour le Puissance 4
-        board = new Cell[ROWS][COLUMNS];
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLUMNS; col++) {
-                board[row][col] = new Cell();
-            }
-        }
+    public ConnectFour(Player player1, Player player2, View view) {
+        super(ROWS, COLUMNS, new Player[]{player1, player2}, view);
     }
 
     @Override
     public void play() {
-        System.out.println("Début du jeu : Puissance 4 !");
+        view.displayMessage("Début du jeu : Puissance 4 !");
         while (!isOver()) {
-            // Afficher le plateau
-            displayBoard();
+            view.displayBoard(board);
 
-            // Demander un coup au joueur actuel
             boolean validMove = false;
             while (!validMove) {
-                System.out.println("C'est au tour de " + currentPlayer.getState());
+                view.displayMessage("C'est au tour de " + currentPlayer.getState());
                 int column = currentPlayer.getMove(board)[1]; // Le joueur choisit une colonne
-                int row = getAvailableRow(column); // Trouver la rangée disponible dans cette colonne
+                int row = getAvailableRow(column);
 
                 if (row != -1) {
                     board[row][column].setState(currentPlayer.getState());
                     validMove = true;
                 } else {
-                    System.out.println("La colonne " + column + " est pleine. Veuillez choisir une autre colonne.");
+                    view.displayMessage("La colonne " + column + " est pleine. Essayez une autre.");
                 }
             }
 
-            // Changer de joueur
-            if (!isOver()) {
-                switchPlayer();
+            if (isOver()) {
+                view.displayBoard(board);
+                view.displayMessage("Le gagnant est : " + currentPlayer.getState());
+                return;
             }
+            switchPlayer();
         }
-
-        // Afficher le plateau final
-        displayBoard();
-
-        // Résultat final
-        if (isWon()) {
-            System.out.println("Le gagnant est : " + currentPlayer.getState());
-        } else {
-            System.out.println("Match nul !");
-        }
+        view.displayMessage("Match nul !");
     }
 
-    /**
-     * Retourne la première rangée disponible pour une colonne donnée.
-     * Si la colonne est pleine, retourne -1.
-     */
     private int getAvailableRow(int column) {
-        for (int row = ROWS - 1; row >= 0; row--) { // Parcourir de bas en haut
+        for (int row = board.length - 1; row >= 0; row--) { // Parcourir de bas en haut
             if (board[row][column].isEmpty()) {
                 return row;
             }
@@ -75,32 +55,72 @@ public class ConnectFour extends BoardGame {
 
     @Override
     public boolean isOver() {
-        // TODO: Implémenter la logique pour vérifier les alignements (victoire ou match nul)
         return isWon() || isDraw();
     }
 
     private boolean isWon() {
-        // TODO: Ajouter la logique pour détecter un alignement de 4 jetons
-        return false;
+        // Vérification horizontale
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col <= COLUMNS - WIN_CONDITION; col++) {
+                if (checkLine(row, col, 0, 1)) {
+                    return true; // Ligne horizontale gagnante
+                }
+            }
+        }
+
+        // Vérification verticale
+        for (int col = 0; col < COLUMNS; col++) {
+            for (int row = 0; row <= ROWS - WIN_CONDITION; row++) {
+                if (checkLine(row, col, 1, 0)) {
+                    return true; // Colonne verticale gagnante
+                }
+            }
+        }
+
+        // Vérification diagonale (montante)
+        for (int row = WIN_CONDITION - 1; row < ROWS; row++) {
+            for (int col = 0; col <= COLUMNS - WIN_CONDITION; col++) {
+                if (checkLine(row, col, -1, 1)) {
+                    return true; // Diagonale montante gagnante
+                }
+            }
+        }
+
+        // Vérification diagonale (descendante)
+        for (int row = 0; row <= ROWS - WIN_CONDITION; row++) {
+            for (int col = 0; col <= COLUMNS - WIN_CONDITION; col++) {
+                if (checkLine(row, col, 1, 1)) {
+                    return true; // Diagonale descendante gagnante
+                }
+            }
+        }
+
+        return false; // Aucun alignement gagnant
+    }
+
+    private boolean checkLine(int startRow, int startCol, int deltaRow, int deltaCol) {
+        State firstState = board[startRow][startCol].getState();
+        if (firstState == State.EMPTY) {
+            return false; // Pas d'alignement possible avec une case vide
+        }
+
+        for (int i = 1; i < WIN_CONDITION; i++) {
+            int newRow = startRow + i * deltaRow;
+            int newCol = startCol + i * deltaCol;
+            if (board[newRow][newCol].getState() != firstState) {
+                return false; // Rupture dans l'alignement
+            }
+        }
+
+        return true; // Alignement détecté
     }
 
     private boolean isDraw() {
         for (int col = 0; col < COLUMNS; col++) {
             if (getAvailableRow(col) != -1) {
-                return false; // Il reste des colonnes jouables
+                return false; // Une colonne est encore jouable
             }
         }
-        return true; // Aucune colonne jouable -> Match nul
-    }
-
-
-    public void displayBoard() {
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLUMNS; col++) {
-                System.out.print("| " + board[row][col].getState().getRepresentation() + " ");
-            }
-            System.out.println("|");
-        }
-        System.out.println("  0   1   2   3   4   5   6"); // Indiquer les colonnes
+        return true; // Toutes les colonnes sont pleines
     }
 }

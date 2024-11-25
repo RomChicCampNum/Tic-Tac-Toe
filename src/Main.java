@@ -1,15 +1,15 @@
-import boardgames.BoardGame;
-import boardgames.TicTacToe;
-import players.Player;
 import util.InteractionUtilisateur;
 import util.View;
+import boardgames.BoardGame;
 
 public class Main {
     public static void main(String[] args) {
-        InteractionUtilisateur interaction = new InteractionUtilisateur();
-        BoardGame game = interaction.chooseGame();
+        InteractionUtilisateur interactionUtilisateur = new InteractionUtilisateur();
+        View view = new View();
+
+        BoardGame game = interactionUtilisateur.chooseGame(view);
         game.play();
-        interaction.close();
+
+        interactionUtilisateur.close();
     }
 }
-

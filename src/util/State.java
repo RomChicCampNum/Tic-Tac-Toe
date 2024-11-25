@@ -1,9 +1,9 @@
 package util;
 
 public enum State {
-    EMPTY("   "), // État vide
-    X(" X "),
-    O(" O ");
+    EMPTY("   "), // Cellule vide
+    X(" X "),     // Joueur X
+    O(" O ");     // Joueur O
 
     private final String representation;
 

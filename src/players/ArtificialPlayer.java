@@ -6,11 +6,10 @@ import util.State;
 import java.util.Random;
 
 public class ArtificialPlayer extends Player {
-    private Random random;
+    private Random random = new Random();
 
     public ArtificialPlayer(State state) {
         super(state);
-        this.random = new Random();
     }
 
     @Override
@@ -20,8 +19,6 @@ public class ArtificialPlayer extends Player {
             row = random.nextInt(board.length);
             col = random.nextInt(board[0].length);
         } while (!board[row][col].isEmpty());
-
-        System.out.println("L'IA joue en (" + row + ", " + col + ")");
         return new int[]{row, col};
     }
 }
