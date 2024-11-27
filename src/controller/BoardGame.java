@@ -1,14 +1,14 @@
-package boardgames;
+package controller;
 
-import util.View;
-import util.Cell;
-import players.Player;
+import view.View;
+import model.Cell;
+import model.Player;
 
 public abstract class BoardGame {
-    protected Cell[][] board;          // Plateau de jeu
-    protected Player[] players;        // Joueurs (X et O)
-    protected Player currentPlayer;    // Joueur actuel
-    protected View view;               // Vue pour afficher le jeu
+    protected Cell[][] board;
+    protected Player[] players;
+    protected Player currentPlayer;
+    protected View view;
 
     public BoardGame(int rows, int cols, Player[] players, View view) {
         this.board = new Cell[rows][cols];
@@ -22,8 +22,8 @@ public abstract class BoardGame {
         this.view = view;
     }
 
-    public abstract void play();      // Chaque jeu implémente sa boucle principale
-    public abstract boolean isOver(); // Vérifie les conditions de fin de jeu
+    public abstract void play();
+    public abstract boolean isOver();
 
     public void switchPlayer() {
         currentPlayer = (currentPlayer == players[0]) ? players[1] : players[0];
@@ -31,9 +31,5 @@ public abstract class BoardGame {
 
     public boolean isCellEmpty(int row, int col) {
         return board[row][col].isEmpty();
-    }
-
-    public Cell[][] getBoard() {
-        return board;
     }
 }

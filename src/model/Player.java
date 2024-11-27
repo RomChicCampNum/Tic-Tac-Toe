@@ -1,7 +1,4 @@
-package players;
-
-import util.Cell;
-import util.State;
+package model;
 
 public abstract class Player {
     private final State state;

@@ -1,9 +1,8 @@
-package boardgames;
+package controller;
 
-import util.State;
-import util.View;
-import util.Cell;
-import players.Player;
+import model.State;
+import view.View;
+import model.Player;
 
 public class TicTacToe extends BoardGame {
     private static final int SIZE = 3; // Taille du plateau

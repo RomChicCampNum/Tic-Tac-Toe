@@ -1,6 +1,6 @@
-import util.InteractionUtilisateur;
-import util.View;
-import boardgames.BoardGame;
+import controller.InteractionUtilisateur;
+import view.View;
+import controller.BoardGame;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,3 +13,4 @@ public class Main {
         interactionUtilisateur.close();
     }
 }
+

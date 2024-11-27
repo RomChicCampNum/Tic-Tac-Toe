@@ -1,9 +1,8 @@
-package boardgames;
+package controller;
 
-import util.State;
-import util.View;
-import util.Cell;
-import players.Player;
+import model.State;
+import view.View;
+import model.Player;
 
 public class ConnectFour extends BoardGame {
     private static final int ROWS = 6;

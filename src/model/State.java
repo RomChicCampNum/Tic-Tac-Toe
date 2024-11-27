@@ -1,4 +1,4 @@
-package util;
+package model;
 
 public enum State {
     EMPTY("   "), // Cellule vide

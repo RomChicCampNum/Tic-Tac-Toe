@@ -1,0 +1,22 @@
+sequenceDiagram
+    actor Utilisateur
+    participant InteractionUtilisateur
+    participant TicTacToe
+    participant View
+    participant Cell
+
+    Utilisateur ->> InteractionUtilisateur: Choisit une cellule (ligne, colonne)
+    InteractionUtilisateur ->> TicTacToe: Passe les coordonnées choisies
+    TicTacToe ->> Cell: Vérifie si la cellule est vide
+    alt Cellule vide
+        TicTacToe ->> Cell: Met à jour l'état (X ou O)
+        TicTacToe ->> TicTacToe: Vérifie les conditions de victoire (isOver)
+        alt Jeu terminé
+            TicTacToe ->> View: Affiche le message de victoire
+        else
+            TicTacToe ->> View: Affiche le plateau mis à jour
+            TicTacToe ->> TicTacToe: Passe au joueur suivant
+        end
+    else
+        TicTacToe ->> InteractionUtilisateur: Message "Cellule occupée"
+    end

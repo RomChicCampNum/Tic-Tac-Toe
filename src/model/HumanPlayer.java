@@ -1,8 +1,6 @@
-package players;
+package model;
 
-import util.InteractionUtilisateur;
-import util.Cell;
-import util.State;
+import controller.InteractionUtilisateur;
 
 public class HumanPlayer extends Player {
     private InteractionUtilisateur interactionUtilisateur;

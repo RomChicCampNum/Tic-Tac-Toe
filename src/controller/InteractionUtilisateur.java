@@ -1,11 +1,10 @@
-package util;
+package controller;
 
-import boardgames.BoardGame;
-import boardgames.TicTacToe;
-import boardgames.ConnectFour;
-import players.Player;
-import players.HumanPlayer;
-import players.ArtificialPlayer;
+import model.Player;
+import model.HumanPlayer;
+import model.ArtificialPlayer;
+import model.State;
+import view.View;
 
 import java.util.Scanner;
 

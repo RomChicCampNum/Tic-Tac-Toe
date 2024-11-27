@@ -1,6 +1,6 @@
-package util;
+package view;
 
-import util.Cell;
+import model.Cell;
 
 public class View {
     // Affiche une grille générique
