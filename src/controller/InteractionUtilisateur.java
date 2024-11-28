@@ -21,12 +21,12 @@ public class InteractionUtilisateur {
 
         switch (choice) {
             case 1:
-                return new TicTacToe(players[0], players[1], view);
+                return new TicTacToe(players, view);
             case 2:
-                return new ConnectFour(players[0], players[1], view);
+                return new ConnectFour(players, view);
             default:
                 System.out.println("Choix invalide. Par défaut : Tic Tac Toe.");
-                return new TicTacToe(players[0], players[1], view);
+                return new TicTacToe(players, view);
         }
     }
 
