@@ -3,10 +3,11 @@ package model;
 import java.util.Random;
 
 public class ArtificialPlayer extends Player {
-    private Random random = new Random();
+    private final Random random;
 
     public ArtificialPlayer(State state) {
         super(state);
+        this.random = new Random();
     }
 
     @Override

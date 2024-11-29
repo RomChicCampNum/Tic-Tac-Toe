@@ -5,61 +5,73 @@ import model.HumanPlayer;
 import model.ArtificialPlayer;
 import model.State;
 import view.View;
+import view.Messages;
 
 import java.util.Scanner;
 
 public class InteractionUtilisateur {
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
+    private final View view;
 
-    public BoardGame chooseGame(View view) {
-        System.out.println("Choisissez un jeu :");
-        System.out.println("1. Tic Tac Toe");
-        System.out.println("2. Puissance 4");
+    public InteractionUtilisateur(View view) {
+        this.view = view;
+    }
 
-        int choice = askForInt("Votre choix :", 1, 2);
+    public BoardGame chooseGame() {
+        view.displayMessage(Messages.WELCOME.getMessage());
+
+        int choice = askForInt(Messages.CHOOSE_GAME.getMessage(), 1, 3);
         Player[] players = choosePlayers();
 
-        switch (choice) {
-            case 1:
-                return new TicTacToe(players, view);
-            case 2:
-                return new ConnectFour(players, view);
-            default:
-                System.out.println("Choix invalide. Par défaut : Tic Tac Toe.");
-                return new TicTacToe(players, view);
-        }
+        return switch (choice) {
+            case 1 -> new TicTacToe(players, view);
+            case 2 -> new ConnectFour(players, view);
+            case 3 -> new Gomoku(players, view);
+            default -> {
+                view.displayMessage("Choix invalide, par défaut : Tic Tac Toe.");
+                yield new TicTacToe(players, view);
+            }
+        };
     }
 
     public Player[] choosePlayers() {
-        System.out.println("1. Humain contre Humain");
-        System.out.println("2. Humain contre IA");
-        System.out.println("3. IA contre IA");
+        int choice = askForInt(Messages.CHOOSE_PLAYERS.getMessage(), 1, 3);
 
-        int choice = askForInt("Votre choix :", 1, 3);
-        switch (choice) {
-            case 1:
-                return new Player[]{new HumanPlayer(State.X, this), new HumanPlayer(State.O, this)};
-            case 2:
-                return new Player[]{new HumanPlayer(State.X, this), new ArtificialPlayer(State.O)};
-            case 3:
-                return new Player[]{new ArtificialPlayer(State.X), new ArtificialPlayer(State.O)};
-            default:
-                return new Player[]{new HumanPlayer(State.X, this), new HumanPlayer(State.O, this)};
-        }
+        return switch (choice) {
+            case 1 -> new Player[]{
+                    new HumanPlayer(State.X, this),
+                    new HumanPlayer(State.O, this)
+            };
+            case 2 -> new Player[]{
+                    new HumanPlayer(State.X, this),
+                    new ArtificialPlayer(State.O)
+            };
+            case 3 -> new Player[]{
+                    new ArtificialPlayer(State.X),
+                    new ArtificialPlayer(State.O)
+            };
+            default -> {
+                view.displayMessage(Messages.INVALID_INPUT.getMessage());
+                yield new Player[]{
+                        new HumanPlayer(State.X, this),
+                        new ArtificialPlayer(State.O)
+                };
+            }
+        };
     }
 
-    public int askForInt(String question, int min, int max) {
+    public int askForInt(String message, int min, int max) {
         int value;
         while (true) {
-            System.out.println(question);
+            view.displayMessage(message); // Affiche le message une seule fois
             try {
                 value = scanner.nextInt();
                 if (value >= min && value <= max) {
                     return value;
                 }
             } catch (Exception e) {
-                scanner.next(); // Ignore la saisie invalide
-                System.out.println("Veuillez entrer un nombre valide.");
+                scanner.next(); // Ignore les saisies invalides
+                view.displayMessage(Messages.INVALID_INPUT.getMessage());
             }
         }
     }

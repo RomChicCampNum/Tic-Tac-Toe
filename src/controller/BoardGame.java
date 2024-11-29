@@ -3,6 +3,7 @@ package controller;
 import model.Cell;
 import model.Player;
 import view.View;
+import view.Messages;
 
 public abstract class BoardGame {
     protected Cell[][] board;
@@ -23,29 +24,29 @@ public abstract class BoardGame {
     }
 
     public void play() {
-        view.displayMessage("Début du jeu !");
+        view.displayMessage(Messages.WELCOME.getMessage());
         while (!isOver()) {
             view.displayBoard(board);
             boolean validMove = false;
             while (!validMove) {
-                view.displayMessage("C'est au tour de " + currentPlayer.getState());
+                view.displayMessage(Messages.PLAYER_TURN.getMessage() + currentPlayer.getState());
                 int[] move = currentPlayer.getMove(board);
                 if (isCellEmpty(move[0], move[1])) {
                     board[move[0]][move[1]].setState(currentPlayer.getState());
                     validMove = true;
                 } else {
-                    view.displayMessage("Cellule occupée. Choisissez-en une autre.");
+                    view.displayMessage(Messages.INVALID_MOVE.getMessage());
                 }
             }
 
             if (isOver()) {
                 view.displayBoard(board);
-                view.displayMessage("Le gagnant est : " + currentPlayer.getState());
+                view.displayMessage(Messages.VICTORY.getMessage() + currentPlayer.getState());
                 return;
             }
             switchPlayer();
         }
-        view.displayMessage("Match nul !");
+        view.displayMessage(Messages.DRAW.getMessage());
     }
 
     protected boolean isCellEmpty(int row, int col) {
@@ -60,17 +61,14 @@ public abstract class BoardGame {
         return isWon() || isDraw();
     }
 
-    protected boolean isWon() {
-        return checkAlignments(1, 0) || // Horizontal
-                checkAlignments(0, 1) || // Vertical
-                checkAlignments(1, 1) || // Diagonal descendante
-                checkAlignments(-1, 1);  // Diagonale montante
+    private boolean isWon() {
+        return checkAlignments(1, 0) || checkAlignments(0, 1) || checkAlignments(1, 1) || checkAlignments(-1, 1);
     }
 
     private boolean checkAlignments(int deltaRow, int deltaCol) {
         for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[0].length; col++) {
-                if (checkLine(row, col, deltaRow, deltaCol)) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (checkLine(row, col, deltaRow, deltaCol, getWinCondition())) {
                     return true;
                 }
             }
@@ -78,14 +76,13 @@ public abstract class BoardGame {
         return false;
     }
 
-    private boolean checkLine(int startRow, int startCol, int deltaRow, int deltaCol) {
+    private boolean checkLine(int startRow, int startCol, int deltaRow, int deltaCol, int length) {
         Cell startCell = board[startRow][startCol];
         if (startCell.isEmpty()) {
             return false;
         }
 
-        int requiredAlignments = getWinCondition();
-        for (int i = 1; i < requiredAlignments; i++) {
+        for (int i = 1; i < length; i++) {
             int newRow = startRow + i * deltaRow;
             int newCol = startCol + i * deltaCol;
             if (newRow < 0 || newRow >= board.length || newCol < 0 || newCol >= board[0].length) {
@@ -98,10 +95,10 @@ public abstract class BoardGame {
         return true;
     }
 
-    protected boolean isDraw() {
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                if (board[row][col].isEmpty()) {
+    private boolean isDraw() {
+        for (Cell[] row : board) {
+            for (Cell cell : row) {
+                if (cell.isEmpty()) {
                     return false;
                 }
             }

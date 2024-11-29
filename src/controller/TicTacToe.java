@@ -10,6 +10,6 @@ public class TicTacToe extends BoardGame {
 
     @Override
     protected int getWinCondition() {
-        return 3; // Aligner 3 symboles pour gagner
+        return 3;
     }
 }

@@ -1,16 +1,12 @@
 import controller.InteractionUtilisateur;
-import view.View;
 import controller.BoardGame;
+import view.View;
 
 public class Main {
     public static void main(String[] args) {
-        InteractionUtilisateur interactionUtilisateur = new InteractionUtilisateur();
-        View view = new View();
-
-        BoardGame game = interactionUtilisateur.chooseGame(view);
+        View view = new View(); // Initialisation de la vue
+        InteractionUtilisateur interactionUtilisateur = new InteractionUtilisateur(view); // Passe la vue
+        BoardGame game = interactionUtilisateur.chooseGame();
         game.play();
-
-        interactionUtilisateur.close();
     }
 }
-

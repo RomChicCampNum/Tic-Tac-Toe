@@ -4,7 +4,7 @@ public class Cell {
     private State state;
 
     public Cell() {
-        this.state = State.EMPTY; // Par défaut, la cellule est vide
+        this.state = State.EMPTY;
     }
 
     public State getState() {
